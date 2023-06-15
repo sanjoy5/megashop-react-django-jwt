@@ -1,75 +1,106 @@
-import React from 'react'
-import { Link, useParams } from 'react-router-dom';
-import { Row, Col, Image, ListGroup, Button, Card } from 'react-bootstrap';
+import React, { useEffect, useState } from 'react'
+import { Link, useLoaderData, useNavigate, useParams } from 'react-router-dom';
+import { Row, Col, Image, Button, Form } from 'react-bootstrap';
 import Rating from '../components/Rating'
-import products from '../products'
+// import products from '../products'
 import { FiArrowLeft } from 'react-icons/fi'
+import { useDispatch, useSelector } from 'react-redux';
+
+import Loading from '../components/Loading';
+import Message from '../components/Message';
+import { singleProduct } from '../actions/ProductActions';
 
 const ProductDetails = () => {
+    const [qty, setQty] = useState(1)
+    const productDetail = useSelector((state) => state.allProducts)
+    const dispatch = useDispatch()
     const { id } = useParams()
-    const product = products.find(p => p._id === id)
+    const navigate = useNavigate()
+    const { loading, product, error } = productDetail
+
+    useEffect(() => {
+        dispatch(singleProduct(id))
+    }, [id, dispatch])
+
+
+    // const product = products.find(p => p._id === id) 
+    // const product = useLoaderData()
+
     const { description, brand, name, image, category, price, rating, numReviews, countInStock } = product;
+
+
+
+
+    const addToCartHandler = () => {
+        navigate(`/cart/${id}?qty=${qty}`)
+    }
+
+
     return (
-        <div>
-            <Link to="/" className='btn bg-primary1 fs-5 mb-4'><FiArrowLeft className='me-1' />Go Back </Link>
-            <Row>
-                <Col md={6}>
-                    <div className="">
-                        <Image src={image} className='border img-fluid' alt={name} />
-                    </div>
-                </Col>
-                <Col md={3}>
-                    <ListGroup variant='flush'>
-                        <ListGroup.Item>
-                            <h3>{name}</h3>
-                        </ListGroup.Item>
+        <>
 
-                        <ListGroup.Item>
-                            <Rating value={rating} text={`${numReviews} reviews`} color={'#FF982E'} />
-                        </ListGroup.Item>
+            {
+                loading ? <Loading />
+                    : error ? <Message variant='danger'>{error}</Message>
+                        : <>
+                            <Link to="/" className='btn bg-primary1 fs-5 mb-4'><FiArrowLeft className='me-1' />Go Back </Link>
+                            <Row>
+                                <Col md={6}>
+                                    <div className="px-lg-5 border">
+                                        <Image src={image} className=' w-100' alt={name} />
+                                    </div>
+                                </Col>
+                                <Col md={6}>
 
-                        <ListGroup.Item>
-                            <strong>Brand: </strong>  {brand}
-                        </ListGroup.Item>
-                        <ListGroup.Item>
-                            <strong>Description:</strong>  ${description}
-                        </ListGroup.Item>
-
-                    </ListGroup>
-                </Col>
-                <Col md={3}>
-                    <Card>
-                        <ListGroup variant='flush'>
-                            <ListGroup.Item>
-                                <Row>
-                                    <Col>Category:</Col>
-                                    <Col><strong>{category}</strong></Col>
-                                </Row>
-                            </ListGroup.Item>
-                            <ListGroup.Item>
-                                <Row>
-                                    <Col>Price:</Col>
-                                    <Col><strong>${price}</strong></Col>
-                                </Row>
-                            </ListGroup.Item>
-                            <ListGroup.Item>
-                                <Row>
-                                    <Col>Status:</Col>
-                                    <Col><strong> {countInStock > 0 ? "In Stock" : "Out of Stock"} </strong></Col>
-                                </Row>
-                            </ListGroup.Item>
-                            <ListGroup.Item>
-                                <Button className='bg-secondary1 w-100' type='button' disabled={countInStock === 0}>Add to Cart</Button>
-                            </ListGroup.Item>
-                        </ListGroup>
+                                    <div className="fs-5"><a className='text-primary' href="/">Home</a> / {category}</div>
+                                    <h3>{name}</h3>
 
 
-                    </Card>
+                                    <Rating value={rating} text={`${numReviews} reviews`} color={'#FF982E'} />
+                                    <p className="fs-5 mt-3"><strong>Price: </strong>  {price}</p>
+                                    <p className="fs-5 mt-3"><strong>Status: </strong>  {countInStock > 0 ? "In Stock" : "Out of Stock"} </p>
 
-                </Col>
-            </Row>
+                                    <div className="d-flex align-items-center gap-4">
+                                        {
+                                            countInStock > 0 && (
+                                                <div className='d-flex align-items-center gap-2'>
+                                                    <strong>Qty: </strong>
+                                                    {/* <Form.Control
+                                                        as='select'
+                                                        value={qty}
+                                                        onChange={(e) => setQty(e.target.value)}
+                                                        style={{ width: '60px' }}
+                                                    >
 
-        </div>
+                                                        {
+                                                            // [0,1,2,3,4...] 
+                                                            [...Array(countInStock).keys()].map(x => (
+                                                                <option key={x+1} value={x+1}>
+                                                                    {x + 1}
+                                                                </option>
+                                                            ))
+                                                        }
+
+                                                    </Form.Control> */}
+
+                                                    <input type="number" style={{ width: '60px', padding: "7px 4px 7px 7px" }} value={qty} onChange={(e) => setQty(e.target.value)} min={1} max={countInStock} className='fs-5 border' />
+                                                </div>
+                                            )
+                                        }
+
+                                        <Button onClick={addToCartHandler} className='bg-secondary1 py-2 px-4 fs-5 cursor-pointer' type='button' disabled={countInStock === 0}>Add to Cart</Button>
+                                    </div>
+
+                                    <p className="fs-5 mt-3"><strong>Description:</strong>  ${description}</p>
+
+                                    <p className="fs-5 mt-3"><strong>Brand: </strong>  {brand}</p>
+                                </Col>
+                            </Row>
+                        </>
+            }
+
+
+        </>
     )
 }
 

@@ -17,13 +17,15 @@ const router = createBrowserRouter([
             {
                 path: "/",
                 element: <Home />,
+                loader: () => fetch('/api/products/')
             },
             {
                 path: "/product/:id",
                 element: <ProductDetails />,
+                loader: ({ params }) => fetch(`/api/products/${params.id}`)
             },
             {
-                path: "/cart",
+                path: "/cart/:pId?",
                 element: <Cart />,
             },
             {

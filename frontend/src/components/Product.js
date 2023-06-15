@@ -36,7 +36,7 @@ const Product = ({ product }) => {
                 <div className="row g-0 align-items-center">
                     <div className="col-md-5">
                         <Link to={`/product/${_id}`}>
-                            <img src={image} className="img-fluid rounded-start" alt="..." />
+                            <img src={image} className="img-fluid rounded-start py-2" alt="..." />
                         </Link>
                     </div>
                     <div className="col-md-7">
@@ -44,10 +44,10 @@ const Product = ({ product }) => {
                             <Link to={`/product/${_id}`}>
                                 <h5 className="card-title prodtitle text-dark">{name}</h5>
                             </Link>
-                            <p className="card-text d-flex gap-1">
+                            <div className="card-text d-flex gap-1 mb-2">
                                 <Rating value={rating} text={`${numReviews} reviews`} color={'#FF982E'} />
                                 {/* ({rating} from {numReviews}) */}
-                            </p>
+                            </div>
                             <h5 className="card-text">${price}</h5>
                         </div>
                     </div>

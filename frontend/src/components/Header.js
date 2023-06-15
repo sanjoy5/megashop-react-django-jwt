@@ -18,6 +18,7 @@ const Header = () => {
                                 placeholder="Search"
                                 className="me-2"
                                 aria-label="Search"
+                                style={{ height: "42px" }}
                             />
                             <Button className='bg-secondary1'>Search</Button>
                         </Form>
@@ -27,6 +28,7 @@ const Header = () => {
                                 placeholder="Search"
                                 className="me-2"
                                 aria-label="Search"
+
                             />
                             <Button className='bg-secondary1'>Search</Button>
                         </Form>
