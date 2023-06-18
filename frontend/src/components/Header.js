@@ -1,10 +1,22 @@
 import React from 'react'
-import { Button, Container, Form, Nav, Navbar } from 'react-bootstrap'
+import { Button, Container, Form, Nav, NavDropdown, Navbar } from 'react-bootstrap'
 import { FiShoppingCart, FiUser } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux'
+import { logout } from '../actions/UserAction';
 
 
 const Header = () => {
+
+    const userLogin = useSelector(state => state.userLogin)
+    const { userInfo } = userLogin
+    const dispatch = useDispatch()
+
+    const handleLogout = () => {
+        console.log('Clicked');
+        dispatch(logout())
+    }
+
     return (
         <header>
             <Navbar className='border-0 bg-primary1' variant='dark' expand="lg">
@@ -38,8 +50,30 @@ const Header = () => {
                             style={{ maxHeight: '100px' }}
                             navbarScroll
                         >
-                            <Link className='d-flex align-items-center gap- text-white' to="/cart"><FiShoppingCart className='fs-5 me-1' /> Cart</Link>
-                            <Link className='d-flex align-items-center gap-1 text-white ms-3' to="/login"><FiUser className='fs-5' /> Login</Link>
+
+                            <Link className='d-flex align-items-center  text-white me-2' to="/cart"><FiShoppingCart className='fs-5 me-1' /> Cart</Link>
+                            {
+                                userInfo ? (
+                                    <NavDropdown title={<span className='text-white '><FiUser className='fs-5' /> {userInfo.name} </span>} id='username'>
+
+                                        <NavDropdown.Item as={Link} to='/profile'>
+                                            Profile
+                                        </NavDropdown.Item>
+
+                                        <NavDropdown.Item onClick={handleLogout}>
+                                            Logout
+                                        </NavDropdown.Item>
+                                    </NavDropdown>
+                                ) : (
+
+
+
+                                    <Link className='d-flex align-items-center gap-1 text-white ms-md-3' to="/login"><FiUser className='fs-5' /> Login</Link>
+
+
+                                )
+                            }
+
 
                         </Nav>
 

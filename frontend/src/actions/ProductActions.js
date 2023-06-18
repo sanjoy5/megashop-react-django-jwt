@@ -10,8 +10,8 @@ export const allProducts = () => async (dispatch) => {
 
     } catch (error) {
         dispatch(isError(
-            error.response && error.response.data.message
-                ? error.response.data.message
+            error.response && error.response.data.detail
+                ? error.response.data.detail
                 : error.message
         ))
     }
@@ -26,8 +26,8 @@ export const singleProduct = (id) => async (dispatch) => {
 
     } catch (error) {
         dispatch(isError(
-            error.response && error.response.data.message
-                ? error.response.data.message
+            error.response && error.response.data.detail
+                ? error.response.data.detail
                 : error.message
         ))
     }
