@@ -29,7 +29,7 @@ const Cart = () => {
     }
 
     const checkoutHandler = () => {
-        navigate('/login?redirect=shipping')
+        navigate('/login?redirect=checkout')
     }
 
 
@@ -65,9 +65,9 @@ const Cart = () => {
                                                     x<input type="number" style={{ width: '50px', padding: "" }} value={item.qty} onChange={(e) => dispatch(addToCart(item.product, e.target.value))} min={1} max={item.countInStock} className='fs-5 border-0' />
                                                 </Col>
                                                 <Col md={1}>
-                                                    <button onClick={() => removeFromCarthandler(item.product)} className="btn btn-outline-danger rounded border border-danger">
-                                                        <FaTrashAlt />
-                                                    </button>
+
+                                                    <FaTrashAlt onClick={() => removeFromCarthandler(item.product)} className="fs-5 text-danger cursor-pointer" />
+
                                                 </Col>
                                             </Row>
                                         </ListGroup.Item>

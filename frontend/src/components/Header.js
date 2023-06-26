@@ -65,14 +65,29 @@ const Header = () => {
                                         </NavDropdown.Item>
                                     </NavDropdown>
                                 ) : (
-
-
-
                                     <Link className='d-flex align-items-center gap-1 text-white ms-md-3' to="/login"><FiUser className='fs-5' /> Login</Link>
-
 
                                 )
                             }
+
+                            {
+                                userInfo && userInfo.isAdmin && (
+                                    <NavDropdown title={<span className='text-white '><FiUser className='fs-5' /> Admin </span>} id='adminmenu'>
+
+                                        <NavDropdown.Item as={Link} to='/admin/users'>
+                                            Users
+                                        </NavDropdown.Item>
+                                        <NavDropdown.Item as={Link} to='/admin/products'>
+                                            Products
+                                        </NavDropdown.Item>
+                                        <NavDropdown.Item as={Link} to='/admin/orders'>
+                                            Orders
+                                        </NavDropdown.Item>
+
+                                    </NavDropdown>
+                                )
+                            }
+
 
 
                         </Nav>

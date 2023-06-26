@@ -9,6 +9,12 @@ import Login from './pages/Login';
 import ProductDetails from './pages/ProductDetails';
 import Register from './pages/Register';
 import Profile from './pages/Profile';
+import Checkout from './pages/Checkout';
+import Payment from './pages/Payment';
+import PlaceOrder from './pages/PlaceOrder';
+import Order from './pages/Order';
+import Users from './pages/Users';
+import UserEdit from './pages/UserEdit';
 
 
 const router = createBrowserRouter([
@@ -39,8 +45,32 @@ const router = createBrowserRouter([
                 element: <Register />,
             },
             {
+                path: "/admin/users",
+                element: <Users />,
+            },
+            {
+                path: "/admin/user/:id/edit",
+                element: <UserEdit />,
+            },
+            {
                 path: "/profile",
                 element: <Profile />,
+            },
+            {
+                path: "/checkout",
+                element: <Checkout />,
+            },
+            {
+                path: "/payment",
+                element: <Payment />,
+            },
+            {
+                path: "/placeorder",
+                element: <PlaceOrder />,
+            },
+            {
+                path: "/orders/:id",
+                element: <Order />,
             },
         ],
     },

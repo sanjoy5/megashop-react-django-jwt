@@ -4,10 +4,13 @@ import { useSelector, useDispatch } from 'react-redux'
 import { getUserDetails, updateProfile } from '../actions/UserAction'
 import Message from '../components/Message'
 import Loading from '../components/Loading'
-import { Col, Row } from 'react-bootstrap'
+import { Col, Row, Table } from 'react-bootstrap'
 import { update_profile_reset } from '../reducers/UpdateProfileReducer'
+import { myOrdersList } from '../actions/OrderAction'
+import { FaTimes } from 'react-icons/fa';
 
 const Profile = () => {
+
     const [name, setName] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
@@ -28,13 +31,17 @@ const Profile = () => {
     const userUpdateProfile = useSelector(state => state.updateProfile)
     const { success } = userUpdateProfile
 
+    const myOrders = useSelector(state => state.myOrders)
+    const { loading: loadingOrders, orders, error: errorOrders } = myOrders
+
     useEffect(() => {
         if (!userInfo) {
             navigate('/login')
         } else {
-            if (!user || !user.name || success) {
+            if (!user || !user.name || success || userInfo._id !== user._id) {
                 dispatch(update_profile_reset())
                 dispatch(getUserDetails('profile'))
+                dispatch(myOrdersList())
             } else {
                 setName(user.name)
                 setEmail(user.email)
@@ -47,7 +54,6 @@ const Profile = () => {
 
         if (password !== confirmPassword) {
             setMessage('Password do not march')
-            return
         } else {
             dispatch(updateProfile({
                 'id': user._id,
@@ -66,6 +72,8 @@ const Profile = () => {
                 <h2>User Profile</h2>
                 {message && <Message variant='danger'>{message}</Message>}
                 {error && <Message variant='danger'>{error}</Message>}
+                {loading && <Loading />}
+
                 <form onSubmit={submitHandler}>
                     <div class="mb-3">
                         <label for="name" class="form-label">Full Name*</label>
@@ -94,6 +102,44 @@ const Profile = () => {
             </Col>
             <Col md={9}>
                 <h2>My Orders</h2>
+                {
+                    loadingOrders ?
+                        <Loading /> :
+                        errorOrders ?
+                            <Message variant='danger'>{errorOrders}</Message>
+                            : <>
+                                <Table striped responsive className='table-sm'>
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Date</th>
+                                            <th>Total</th>
+                                            <th>Paid</th>
+                                            <th>Delivered</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {
+                                            orders?.map(order => (
+                                                <tr key={order._id}>
+                                                    <td>{order._id}</td>
+                                                    <td>{order.createdAt.substring(0, 10)}</td>
+                                                    <td>${order.totalPrice}</td>
+                                                    <td>{order.isPaid ? order.paidAt : <FaTimes className="text-danger" />}</td>
+                                                    <td>
+                                                        <Link to={`/orders/${order._id}`}>
+                                                            <button className="btn bg-primary1">Details</button>
+                                                        </Link>
+                                                    </td>
+                                                    <td></td>
+                                                </tr>
+                                            ))
+                                        }
+                                    </tbody>
+                                </Table>
+                            </>
+                }
             </Col>
         </Row>
     );
