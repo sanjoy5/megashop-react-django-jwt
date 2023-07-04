@@ -1,6 +1,6 @@
 import React from 'react'
 import {
-    createBrowserRouter
+    createHashRouter
 } from "react-router-dom";
 import Home from './pages/Home';
 import Main from './layout/Main';
@@ -15,9 +15,12 @@ import PlaceOrder from './pages/PlaceOrder';
 import Order from './pages/Order';
 import Users from './pages/Users';
 import UserEdit from './pages/UserEdit';
+import Products from './pages/Products';
+import ProductEdit from './pages/ProductEdit';
+import AllOrders from './pages/AllOrders';
 
 
-const router = createBrowserRouter([
+const router = createHashRouter([
     {
         path: "/",
         element: <Main />,
@@ -30,7 +33,7 @@ const router = createBrowserRouter([
             {
                 path: "/product/:id",
                 element: <ProductDetails />,
-                loader: ({ params }) => fetch(`/api/products/${params.id}`)
+                loader: ({ params }) => fetch(`/api/products/${params.id}/`)
             },
             {
                 path: "/cart/:pId?",
@@ -52,6 +55,15 @@ const router = createBrowserRouter([
                 path: "/admin/user/:id/edit",
                 element: <UserEdit />,
             },
+
+            {
+                path: "/admin/products",
+                element: <Products />,
+            },
+            {
+                path: "/admin/product/:id/edit",
+                element: <ProductEdit />,
+            },
             {
                 path: "/profile",
                 element: <Profile />,
@@ -67,6 +79,10 @@ const router = createBrowserRouter([
             {
                 path: "/placeorder",
                 element: <PlaceOrder />,
+            },
+            {
+                path: "/admin/orders",
+                element: <AllOrders />,
             },
             {
                 path: "/orders/:id",

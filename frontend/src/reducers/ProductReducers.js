@@ -9,23 +9,28 @@ const productsSlice = createSlice({
     },
     reducers: {
         isLoading: (state) => {
-            state.loading = true
-            state.products = []
+            return {
+                loading: true,
+                products: []
+            }
         },
         getProducts: (state, action) => {
-            state.loading = false
-            state.products = action.payload
+            return {
+                loading: false,
+                products: action.payload.products,
+                page: action.payload.page,
+                pages: action.payload.pages,
+            }
         },
-        productDetails: (state, action) => {
-            state.loading = false
-            state.product = action.payload
-        },
+
         isError: (state, action) => {
-            state.loading = false
-            state.error = action.payload
+            return {
+                loading: false,
+                error: action.payload
+            }
         }
     }
 })
 
-export const { isLoading, getProducts, productDetails, isError } = productsSlice.actions
+export const { isLoading, getProducts, isError } = productsSlice.actions
 export default productsSlice.reducer

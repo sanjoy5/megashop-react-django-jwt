@@ -5,6 +5,8 @@ import { cart_clear_items } from '../reducers/cartReducers';
 import { order_details_fail, order_details_request, order_details_success } from '../reducers/OrderDetailsReducers';
 import { order_pay_fail, order_pay_request, order_pay_success } from '../reducers/OrderPayReducer';
 import { myorder_fail, myorder_request, myorder_success } from '../reducers/MyOrderReducers';
+import { orders_fail, orders_request, orders_success } from '../reducers/OrdersReducers';
+import { order_deliver_fail, order_deliver_request, order_deliver_success } from '../reducers/OrderDeliverdReducer';
 
 
 
@@ -127,6 +129,69 @@ export const myOrdersList = () => async (dispatch, getState) => {
 
     } catch (error) {
         dispatch(myorder_fail(
+            error.response && error.response.data.detail
+                ? error.response.data.detail
+                : error.message
+        ))
+    }
+}
+
+export const ordersList = () => async (dispatch, getState) => {
+    try {
+        dispatch(orders_request())
+
+        const {
+            userLogin: { userInfo }
+        } = getState()
+
+        const config = {
+            headers: {
+                'Content-type': 'application/json',
+                Authorization: `Bearer ${userInfo.token}`
+            }
+        }
+        const { data } = await axios.get(
+            '/api/orders/',
+            config
+        )
+
+        dispatch(orders_success(data))
+
+    } catch (error) {
+        dispatch(orders_fail(
+            error.response && error.response.data.detail
+                ? error.response.data.detail
+                : error.message
+        ))
+    }
+}
+
+
+
+export const deliverOrder = (order) => async (dispatch, getState) => {
+    try {
+        dispatch(order_deliver_request())
+
+        const {
+            userLogin: { userInfo }
+        } = getState()
+
+        const config = {
+            headers: {
+                'Content-type': 'application/json',
+                Authorization: `Bearer ${userInfo.token}`
+            }
+        }
+        const { data } = await axios.put(
+            `/api/orders/${order._id}/deliver/`,
+            {},
+            config
+        )
+
+        dispatch(order_deliver_success(data))
+
+    } catch (error) {
+        dispatch(order_deliver_fail(
             error.response && error.response.data.detail
                 ? error.response.data.detail
                 : error.message

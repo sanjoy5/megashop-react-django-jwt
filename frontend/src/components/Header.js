@@ -1,12 +1,15 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Button, Container, Form, Nav, NavDropdown, Navbar } from 'react-bootstrap'
-import { FiShoppingCart, FiUser } from 'react-icons/fi';
-import { Link } from 'react-router-dom';
+import { FiShoppingCart, FiUser, FiUserCheck } from 'react-icons/fi';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux'
 import { logout } from '../actions/UserAction';
 
 
-const Header = () => {
+const Header = ({ }) => {
+    const [keyword, setKeyword] = useState('')
+    const navigate = useNavigate()
+    const location = useLocation()
 
     const userLogin = useSelector(state => state.userLogin)
     const { userInfo } = userLogin
@@ -17,32 +20,61 @@ const Header = () => {
         dispatch(logout())
     }
 
+    const submitHandler = (e) => {
+        e.preventDefault()
+        if (keyword) {
+            navigate(`/?keyword=${keyword}&page=1`)
+        } else {
+            navigate(location.pathname)
+        }
+    }
+
     return (
         <header>
             <Navbar className='border-0 bg-primary1' variant='dark' expand="lg">
                 <Container>
-                    <Link to="/" className='fs-4 fw-bold text-white'>MegaShop</Link>
+                    <Link to="/" className='fs-4 fw-bold text-white me-md-5'>MegaShop</Link>
+                    {
+                        userInfo && userInfo.isAdmin && (
+                            <NavDropdown title={<span className='text-white '><FiUserCheck className='fs-5' /> Admin </span>} id='adminmenu'>
+
+                                <NavDropdown.Item as={Link} to='/admin/users'>
+                                    Users
+                                </NavDropdown.Item>
+                                <NavDropdown.Item as={Link} to='/admin/products'>
+                                    Products
+                                </NavDropdown.Item>
+                                <NavDropdown.Item as={Link} to='/admin/orders'>
+                                    Orders
+                                </NavDropdown.Item>
+
+                            </NavDropdown>
+                        )
+                    }
+
                     <Navbar.Toggle aria-controls="navbarScroll" />
                     <Navbar.Collapse id="navbarScroll">
-                        <Form className="d-none d-md-flex mx-auto w-50">
+                        <Form onSubmit={submitHandler} className="d-none d-md-flex mx-auto w-50">
                             <Form.Control
-                                type="search"
+                                type="text"
                                 placeholder="Search"
+                                name='q'
+                                onChange={(e) => setKeyword(e.target.value)}
                                 className="me-2"
-                                aria-label="Search"
                                 style={{ height: "42px" }}
                             />
-                            <Button className='bg-secondary1'>Search</Button>
+                            <Button type='submit' className='bg-secondary1'>Search</Button>
                         </Form>
-                        <Form className="d-flex mx-auto w-100 mt-2 d-md-none">
+                        <Form onSubmit={submitHandler} className="d-flex mx-auto w-100 mt-2 d-md-none">
                             <Form.Control
-                                type="search"
+                                type="text"
                                 placeholder="Search"
+                                name='q'
+                                onChange={(e) => setKeyword(e.target.value)}
                                 className="me-2"
-                                aria-label="Search"
 
                             />
-                            <Button className='bg-secondary1'>Search</Button>
+                            <Button type='submit' className='bg-secondary1'>Search</Button>
                         </Form>
 
                         <Nav
@@ -70,23 +102,6 @@ const Header = () => {
                                 )
                             }
 
-                            {
-                                userInfo && userInfo.isAdmin && (
-                                    <NavDropdown title={<span className='text-white '><FiUser className='fs-5' /> Admin </span>} id='adminmenu'>
-
-                                        <NavDropdown.Item as={Link} to='/admin/users'>
-                                            Users
-                                        </NavDropdown.Item>
-                                        <NavDropdown.Item as={Link} to='/admin/products'>
-                                            Products
-                                        </NavDropdown.Item>
-                                        <NavDropdown.Item as={Link} to='/admin/orders'>
-                                            Orders
-                                        </NavDropdown.Item>
-
-                                    </NavDropdown>
-                                )
-                            }
 
 
 
